@@ -41,4 +41,10 @@ export class TransportService {
         this.usersonline.push(useronline);
         //this.ChangeUsersCount.emit(this.usersonline.length);
     }
+
+    private startConnection = (): void => {
+        connection.start().catch(function (err) {
+            return console.error(err.toString());
+        });
+    }
 }

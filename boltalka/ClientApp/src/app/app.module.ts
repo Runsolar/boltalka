@@ -3,10 +3,14 @@ import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
+import { BoltalkaComponent } from './boltalka.component';
+import { SenderComponent } from './sender.component';
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
+        BoltalkaComponent,
+        SenderComponent
     ],
     imports: [
         BrowserModule,
