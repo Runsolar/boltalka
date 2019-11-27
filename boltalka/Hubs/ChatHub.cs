@@ -10,7 +10,7 @@ namespace boltalka.Hubs
     public class ChatHub : Hub
     {
         //База пользователей
-        static List<User> Users = new List<User>()
+        static List<User> users = new List<User>()
         {
             new User { userid = 0, userGid = 0, nickName = "Doorman", nickColor="#ffffff", msgColor="#ffffff", selectedAsRecipient = false, itsMe = false, banned=false, password="1"},
             new User { userid=100, userGid=80, nickName= "Вася", nickColor= "#ff0000", msgColor= "#ff0000", selectedAsRecipient = false, itsMe = false, banned=false, password= "1" },
@@ -27,7 +27,7 @@ namespace boltalka.Hubs
 
 
         //Кто онлайн
-        static List<User> UsersOnline = new List<User>()
+        static List<User> usersOnline = new List<User>()
         {
             new User { userid = 0, userGid = 0, nickName = "Doorman", nickColor="#ffffff", msgColor="#ffffff",
                 selectedAsRecipient = false, itsMe = false, banned=false, password="", connectionId="Doorman-0000-0110-0000-100000000001"},
@@ -46,8 +46,8 @@ namespace boltalka.Hubs
 
         public async Task _newMessageFromClient(IncomingMessage inMessage)
         {
-            User sender = UsersOnline.FirstOrDefault(u => u.connectionId == inMessage.connectionId);
-            User receiver = UsersOnline.FirstOrDefault(u => u.userid == inMessage.receiverId);
+            User sender = usersOnline.FirstOrDefault(u => u.connectionId == inMessage.connectionId);
+            User receiver = usersOnline.FirstOrDefault(u => u.userid == inMessage.receiverId);
 
             OutboundMessage outMessage = new OutboundMessage();
 
@@ -96,7 +96,68 @@ namespace boltalka.Hubs
                 }
             }
 
-            //return true;
+        }
+
+        // Подключение нового пользователя
+        public async Task connect(string userName, string userPassword)
+        {
+
+            User user = users.FirstOrDefault(u => u.nickName == userName && u.password == userPassword);
+            var connectionId = Context.ConnectionId;
+
+            if (user == null)
+            {
+                //Отпрвляем кто онлайн
+                await Clients.Caller.SendAsync("onConnectedUsersOnlineList", usersOnline);
+                //Отправляем список последних сообщений
+                await Clients.Caller.SendAsync("onConnectedLastOutboundMessages", lastOutboundMessages);
+            }
+            else if (user.banned == true)
+            {
+                return;
+            }
+            else if (usersOnline.Any(x => x.connectionId == connectionId))
+            {
+                return;
+            }
+            else if (usersOnline.Any(x => x.nickName == users.FirstOrDefault(u => u.nickName == userName).nickName))
+            {
+                return;
+            }
+            else
+            {
+                User newUser = new User()
+                {
+                    connectionId = connectionId,
+                    userid = user.userid,
+                    userGid = user.userGid,
+                    nickName = user.nickName,
+                    nickColor = user.nickColor,
+                    msgColor = user.msgColor,
+                    password = ""
+                };
+
+                //Добавляем нового пользователя в юзерлист
+                usersOnline.Add(newUser);
+
+                // Посылаем сообщение текущему пользователю об его авторизации
+                await Clients.Caller.SendAsync("onConnectedUserIsLoggedIn", newUser);
+
+                //ID соединения отправляем только владельцу
+                newUser.connectionId = null;
+                // Посылаем сообщение всем пользователям, кроме текущего
+                await Clients.AllExcept(connectionId).SendAsync("onNewUserConnected", newUser);
+                newUser.connectionId = connectionId;
+
+                //Пользователь зашел в ЧАТ
+                IncomingMessage inMessage = new IncomingMessage();
+                inMessage.connectionId = usersOnline.FirstOrDefault(x => x.nickName == "Doorman").connectionId;
+                inMessage.receiverId = 0;
+                inMessage.message = newUser.nickName + ", welcome to the Boltalka!";
+                inMessage.prvMsg = false;
+                await _newMessageFromClient(inMessage);
+            }
+
         }
 
     }
