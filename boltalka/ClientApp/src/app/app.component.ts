@@ -9,7 +9,6 @@ const connection = new signalR.HubConnectionBuilder()
     .configureLogging(signalR.LogLevel.Information)
     .build();
 
-
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',

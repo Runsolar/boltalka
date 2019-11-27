@@ -30,14 +30,14 @@ export class SenderComponent implements OnInit {
     prvMsg: boolean = false;
 
     users: Array<User>;
-
+/*
     apptransport: AppTransport;
     constructor(private _apptransport: AppTransport) {
         this.apptransport = _apptransport;
         this.users = _apptransport.usersonline;
         this.subscribeToEventsFromTransport();
     }
-
+*/
     ngOnInit() {
     }
 
@@ -89,7 +89,7 @@ export class SenderComponent implements OnInit {
     //Подписываемся к событиям сервера
     private subscribeToEventsFromTransport(): void {
         let self = this;
-
+/*
         //Получаем событие об успешной авторизации
         self.apptransport.onUserIsLoggedInAndAuth.subscribe((ImAuth: boolean) => {
             self.myId = self.apptransport.MyId;
@@ -97,6 +97,7 @@ export class SenderComponent implements OnInit {
             self.auth = ImAuth;
             self.myConnectionId = self.apptransport.MyConnectionId;
         });
+        */
     }
 
 }

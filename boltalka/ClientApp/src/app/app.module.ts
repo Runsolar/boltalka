@@ -9,8 +9,8 @@ import { SenderComponent } from './sender.component';
 @NgModule({
     declarations: [
         AppComponent,
-        BoltalkaComponent,
-        SenderComponent
+        //BoltalkaComponent,
+        //SenderComponent
     ],
     imports: [
         BrowserModule,
