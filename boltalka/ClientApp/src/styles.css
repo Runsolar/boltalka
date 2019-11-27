@@ -1,33 +1,230 @@
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
-html, body {
+* {
   margin: 0;
   padding: 0;
 }
 
-.input-zone {
-  align-items: center;
+html,
+body {
+  background-color: black;
+  font-size: 16px;
+  font-family: Tahoma;
+  color: azure;
+}
+
+header {
+  font-size: 12px;
+}
+
+p {
+  font-size: 12px;
+  font-family: Tahoma;
+}
+
+.wrapper {
   display: flex;
   flex-direction: row;
-  margin: 10px;
+  justify-content: space-between;
+  height: 100%;
+  background-color: white;
 }
 
-.input-zone-input {
-  flex: 1;
-  margin-right: 10px;
+  .wrapper > .menu {
+    background-color: black;
+    border: 1px solid #fff;
+    border-radius: 10px;
+    flex: 0 0 auto;
+    position: relative;
+    overflow-y: hidden;
+    overflow-x: hidden;
+  }
+
+.menu:hover {
+  border-color: goldenrod;
+  outline: 0;
 }
 
-.message-author {
-  font-weight: bold;
+.wrapper > .chat {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background-color: white;
+  /*
+    align-content: space-around;
+    word-wrap: break-word;
+*/
+  /*
+    тут больше не трогать
+*/
+  flex: 1 6 100%;
 }
 
-.messages {
-  border: 1px solid #000;
-  margin: 10px;
-  max-height: 300px;
-  min-height: 300px;
+.chat > .board {
+  /*
+    height: 80%;
+        */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-content: flex-end;
+  background-color: black;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  margin: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 4px;
+  padding-right: 4px;
+  flex: 1 6 100%;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.board:hover {
+  border-color: goldenrod;
+  outline: 0;
+}
+
+
+.chat > .board > .messages {
+  background-color: black;
+  padding: 0px;
+  word-wrap: break-word;
+  word-break: break-all;
   overflow-y: auto;
-  padding: 5px;
+  overflow-x: hidden;
+  flex: 1 6 100%;
+}
+
+.chat > .sender {
+  background-color: black;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  margin: 0px;
+  padding-top: 4px;
+  height: 30px;
+  position: relative;
+  /*
+    flex: 0 0 auto;
+*/
+}
+
+.sender:hover {
+  border-color: goldenrod;
+  outline: 0;
+}
+
+.wrapper > .info {
+  background-color: black;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  flex: 0 0 auto;
+  position: relative;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+.info:hover {
+  border-color: goldenrod;
+  outline: 0;
+}
+
+#msgsender {
+  border: 1px solid #ffffff;
+  width: 50%;
+  height: 25px;
+  border-radius: 5px;
+}
+
+  #msgsender:focus {
+    /*border-color: #66afe9;*/
+    border-color: yellow;
+    outline: 0;
+  }
+
+.msgbutton {
+  background-color: #404040;
+  border: 1px solid #ffcc00;
+  color: #ffcc00;
+  padding: 4px 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+  .msgbutton:hover {
+    background-color: #000000;
+  }
+
+  .msgbutton:active {
+    background-color: #404040;
+  }
+
+.authinput {
+  border: 1px solid #ffffff;
+  height: 25px;
+  border-radius: 5px;
+  width: 150px;
+}
+
+  .authinput:focus {
+    /*border-color: #66afe9;*/
+    border-color: yellow;
+    outline: 0;
+  }
+
+.authbutton {
+  background-color: #404040;
+  border: 1px solid #ffcc00;
+  color: #ffcc00;
+  padding: 4px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+  .authbutton:hover {
+    background-color: #000000;
+  }
+
+  .authbutton:active {
+    background-color: #404040;
+  }
+
+#g6655 {
+  cursor: pointer;
+}
+
+#g6665 {
+  cursor: pointer;
+}
+
+#g6672 {
+  cursor: pointer;
+}
+
+#g6679 {
+  cursor: pointer;
+}
+
+#g6692 {
+  cursor: pointer;
+}
+
+#g6700 {
+  cursor: pointer;
+}
+
+#g6710 {
+  cursor: pointer;
+}
+
+#g6719 {
+  cursor: pointer;
 }

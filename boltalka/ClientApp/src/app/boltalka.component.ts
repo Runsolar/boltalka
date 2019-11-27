@@ -9,9 +9,19 @@ import { SenderComponent} from "./sender.component";
 })
 export class BoltalkaComponent {
 
-  constructor() { }
+    @ViewChild("scrollboard", { static: false }) private myScrollContainer: ElementRef;
 
-  ngOnInit() {
-  }
+    @ViewChild(SenderComponent, { static: false }) private msgsenderComponent: SenderComponent;
+    /*
+    SmileClickedEventFromMenu(smileid: string): void {
+        this.msgsenderComponent.msg += smileid;
+        this.msgsenderComponent.onKey(this.msgsenderComponent.msg);
+    }
+    */
+    ngOnInit() { }
+
+    ngAfterViewChecked() { }
+
+    scrollToBottom(): void { }
 
 }

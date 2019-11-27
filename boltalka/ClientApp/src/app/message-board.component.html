@@ -1,0 +1,21 @@
+<div id="messages" class="messages" angular2-auto-scroll lock-y-offset="10" observe-attributes>
+  <div *ngFor="let msg of messages" id="{{msg.msgId}}"
+       style="margin-top:4px; border-radius: 4px; background-color:#000000;">
+    <p [style.background-color]="msg.prvMsg == true ? '#404040' : '#000000'"
+       [style.border-radius]="msg.prvMsg == true ? '4px' : '0px'">
+      <span style="font-size:11px; color:grey;">
+        <b>{{msg.time}}</b>
+      </span>
+      <span style="font-family: tahoma; font-size: 15px;">
+        <font color="{{msg.senderNickColor}}"><b>{{msg.senderNickName}}:</b></font>
+      </span>
+      <span style="font-family: tahoma; font-size: 15px;">
+        <font color="{{msg.receiverNickColor}}"><b *ngIf="(msg.receiverId != 0)">{{msg.receiverNickName}},</b></font>
+      </span>
+      <span style="font-family: Tahoma; font-size: 15px;">
+        <font color="{{msg.msgColor}}" [innerHtml]="msg.message"></font>
+        <font *ngIf="(myGid == 10)" color="red" (click)="deleteMsg(msg.msgId)" style="cursor:pointer">[x]</font>
+      </span>
+    </p>
+  </div>
+</div>

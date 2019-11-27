@@ -1,1 +1,14 @@
-<p>sender works!</p>
+<p *ngIf="auth" style="text-align: center;">
+  &nbsp;
+  <font color="#FFDD00">Приватно</font> &nbsp;<input type="checkbox" name="private" value="{{prvMsg}}" (change)="prvMsg=!prvMsg;">
+  &nbsp;
+  <font color="#FFDD00">  [{{msglimit}}] </font> &nbsp;
+  <input type="hidden" [(ngModel)]="auth">
+  <input #msgsender name="msgsender" id="msgsender" type="text" maxlength="255" (keyup)="onKey($event);" (keyup.enter)="onClickSendMsg();" [(ngModel)]="msg" value="{{msg}}"> &nbsp;
+  <button class="msgbutton" (click)="onClickSendMsg();">Отправить</button>
+</p>
+<p *ngIf="!auth" style="text-align: center;">
+  <font style="font-family: tahoma; font-size: 12px; color: #FFDD00;"> Nick: </font> <input class="authinput" type="text" maxlength="13" [(ngModel)]="userName"> &nbsp;
+  <font style="font-family: tahoma; font-size: 12px; color: #FFDD00;"> Пароль: </font> <input class="authinput" type="password" maxlength="16" [(ngModel)]="userPassword"> &nbsp;
+  <button class="authbutton" (click)="onClickSendAuth();">Войти</button>
+</p>

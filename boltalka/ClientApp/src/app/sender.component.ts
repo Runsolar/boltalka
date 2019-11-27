@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Injectable } from '@angular/core';
-
 import { OutboundMessage } from './outbound-message.model';
+import { TransportService } from './transport.service';
 import { User } from './user.model';
 
 @Component({
@@ -30,14 +30,14 @@ export class SenderComponent implements OnInit {
     prvMsg: boolean = false;
 
     users: Array<User>;
-/*
-    apptransport: AppTransport;
-    constructor(private _apptransport: AppTransport) {
+
+    apptransport: TransportService;
+    constructor(private _apptransport: TransportService) {
         this.apptransport = _apptransport;
         this.users = _apptransport.usersonline;
         this.subscribeToEventsFromTransport();
     }
-*/
+
     ngOnInit() {
     }
 
@@ -58,27 +58,27 @@ export class SenderComponent implements OnInit {
     //Отправка сообщения
     onClickSendMsg = function (): number {
 
-        let NewOutboundMessage: OutboundMessage = new OutboundMessage();
+        let newOutboundMessage: OutboundMessage = new OutboundMessage();
 
         if (this.msg.length == 0) return -1;
 
-        NewOutboundMessage.connectionId = this.MyConnectionId;
-        NewOutboundMessage.receiverId = 0;
+        newOutboundMessage.connectionId = this.MyConnectionId;
+        newOutboundMessage.receiverId = 0;
         //Пользовательское сообщение
-        NewOutboundMessage.instruction = 0;
+        newOutboundMessage.instruction = 0;
 
         if (this.msg.length > this.maxmsglength)
-            NewOutboundMessage.message = this.msg.substr(0, this.maxmsglength);
-        else NewOutboundMessage.message = this.msg;
+            newOutboundMessage.message = this.msg.substr(0, this.maxmsglength);
+        else newOutboundMessage.message = this.msg;
 
-        if (this.users.find((obj: User) => obj.SelectedAsRecipient === true) == undefined)
-            NewOutboundMessage.receiverId = 0;
+        if (this.users.find((obj: User) => obj.selectedAsRecipient === true) == undefined)
+            newOutboundMessage.receiverId = 0;
         else
-            NewOutboundMessage.receiverId = this.users.find((obj: User) => obj.SelectedAsRecipient === true).userid;
+            newOutboundMessage.receiverId = this.users.find((obj: User) => obj.selectedAsRecipient === true).userid;
 
-        NewOutboundMessage.prvMsg = this.prvMsg;
+        newOutboundMessage.prvMsg = this.prvMsg;
 
-        this._apptransport.sendMsgOnServer(NewOutboundMessage);
+        this._apptransport.sendMsgOnServer(newOutboundMessage);
 
         this.msg = '';
         this.msglimit = this.maxmsglength;
