@@ -35,11 +35,6 @@ export class TransportService {
     private registerOnServerEvents(): void {
         let self: TransportService = this;
 
-        connection.on("onConnectedUsersOnlineList", (usersonline: Array<User>): void => {
-            self.clearUserList();
-            usersonline.map(u => self.addUserInUserList(u));
-        });
-
         // передаем список пользователей по запросу поиска
         connection.on("usersOfflineList", (usersoffline: Array<User>): void => {
             self.clearOfflineUserList();
@@ -64,6 +59,38 @@ export class TransportService {
             //self.onUserIsLoggedInAndAuth.emit(self.myAuth);
             iam.itsMe = true;
             self.addUserInUserList(iam);
+        });
+
+        // добавляем нового пользователя в юзерлист
+        connection.on("onNewUserConnected", (newUser: User): void => {
+            self.addUserInUserList(newUser);
+        });
+
+        // удаление пользователя, вышедшего из чата
+        connection.on("onUserDisconnected", (nickName: string): void => {
+            self.removeUsersFromUserList(nickName);
+        });
+
+        // получаем последние сообщения с сервера
+        connection.on("onConnectedLastOutboundMessages", (lastIncomingMessages: Array<IncomingMessage>): void => {
+            self.clearIncomingMessageInPoolt();
+            /*
+            for (let LastIncomingMessage of LastIncomingMessages) {
+                self.addIncomingMessageInPool(LastIncomingMessage);
+            }
+            */
+            lastIncomingMessages.map(m => self.addIncomingMessageInPool(m));
+        });
+
+        // получаем сообщение с сервера
+        connection.on("onConnectedUsersOnlineList", (usersonline: Array<User>): void => {
+            self.clearUserList();
+            usersonline.map(u => self.addUserInUserList(u));
+        });
+
+        // получаем приватное сообщение с сервера
+        connection.on("addMessage", (NewIncomingMessage: IncomingMessage): void => {
+            self.addIncomingMessageInPool(NewIncomingMessage);
         });
     }
 
@@ -92,6 +119,18 @@ export class TransportService {
         for (let n: number = this.usersoffline.length; n > 0; n--) {
             this.usersoffline.pop();
         }
+    }
+
+    clearIncomingMessageInPoolt = (): void => {
+        for (let n: number = this.incomingmessages.length; n > 0; n--) {
+            this.incomingmessages.pop();
+        }
+    }
+
+    removeUsersFromUserList = (NickName: string): void => {
+        var itsMe: boolean = this.usersonline.find((obj: User) => obj.nickName === NickName).itsMe;
+        this.usersonline.splice(this.usersonline.findIndex((obj: User) => obj.nickName === NickName), 1);
+        //this.ChangeUsersCount.emit(this.usersonline.length);
     }
 
     // отправляем сообщение на сервер
