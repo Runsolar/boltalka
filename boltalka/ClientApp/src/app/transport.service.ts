@@ -14,7 +14,10 @@ const connection = new signalR.HubConnectionBuilder()
     providedIn: 'root'
 })
 export class TransportService {
-    myConnectionId: string = "000000000000000000";
+    myId: number = 0;
+    myGid: number = 0;
+    myAuth: boolean = false;
+    myConnectionId: string;
 
     // online list
     usersonline: Array<User>;
@@ -51,6 +54,16 @@ export class TransportService {
         connection.on("broadcastMessageReceived", (newIncomingMessage: IncomingMessage) => {
             //console.log(newIncomingMessage.message);
             self.addIncomingMessageInPool(newIncomingMessage);
+        });
+
+        connection.on("onConnectedUserIsLoggedIn", (iam: User): void => {
+            self.myId = iam.userid;
+            self.myGid = iam.userGid;
+            self.myAuth = true;
+            self.myConnectionId = iam.connectionId;
+            //self.onUserIsLoggedInAndAuth.emit(self.myAuth);
+            iam.itsMe = true;
+            self.addUserInUserList(iam);
         });
     }
 
