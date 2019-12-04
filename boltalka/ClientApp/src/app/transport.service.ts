@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import * as signalR from "@aspnet/signalr";
 
 import { User } from "./user.model";
@@ -24,12 +24,18 @@ export class TransportService {
     // offline list
     usersoffline: Array<User>;
     incomingmessages: Array<IncomingMessage>;
+    public connectionExists: Boolean;
+
+    // событие о подключении к хабу
+    public onConnected: EventEmitter<void> = new EventEmitter<void>();
+    public onUserIsLoggedInAndAuth: EventEmitter<boolean> = new EventEmitter<boolean>();
+    public ChangeUsersCount: EventEmitter<number> = new EventEmitter<number>();
+
 
     constructor() {
         this.usersonline = new Array<User>();
         this.incomingmessages = new Array<IncomingMessage>();
         this.registerOnServerEvents();
-        this.startConnection(); // connecting to the Hub
     }
 
     private registerOnServerEvents(): void {
@@ -52,11 +58,12 @@ export class TransportService {
         });
 
         connection.on("onConnectedUserIsLoggedIn", (iam: User): void => {
+            console.log("iam.connectionId is " + iam.connectionId);
             self.myId = iam.userid;
             self.myGid = iam.userGid;
             self.myAuth = true;
             self.myConnectionId = iam.connectionId;
-            //self.onUserIsLoggedInAndAuth.emit(self.myAuth);
+            self.onUserIsLoggedInAndAuth.emit(self.myAuth);
             iam.itsMe = true;
             self.addUserInUserList(iam);
         });
@@ -134,6 +141,11 @@ export class TransportService {
     }
 
     // отправляем сообщение на сервер
+    sendAuthDataOnServer = (userName: string, userPassword: string): void => {
+        connection.send("connect", userName, userPassword);
+    }
+
+    // отправляем сообщение на сервер
     sendMsgOnServer = (newOutboundMessage: OutboundMessage): void => {
         connection.send("_newMessageFromClient", newOutboundMessage);
     }
@@ -147,10 +159,76 @@ export class TransportService {
         newOutboundMessage.prvMsg = false;
         this.sendMsgOnServer(newOutboundMessage);
     }
-
+/*
     private startConnection = (): void => {
         connection.start().catch(function (err) {
             return console.error(err.toString());
         });
+    }
+    */
+    // подписываемся к событиям сервера
+    private subscribeToEvents = (): void => {
+        // получить список кто онлайн
+        this.onConnected.subscribe(() => {
+            connection.send("connect", "", "");
+        });
+    };
+/*
+    private startConnection = (): void => {
+        let self: TransportService = this;
+        connection.start().then((data: any) => {
+            console.log("startConnection " + data);
+            self.connectionExists = true;
+            self.onConnected.emit();
+            console.log("Send  onConnected");
+        }).catch((error: any) => {
+            console.log("Could not connect " + error);
+        });
+    }
+*/
+
+    public checkConnectionState = (): void => {
+        let self: TransportService = this;
+        console.log("Checking connection state...");
+        /*
+        if (connection.state == signalR.HubConnectionState.Disconnected) {
+            try {
+                console.log("Connection is disconnected. Try to connect...");
+                connection.start().then((data: any) => {
+                    console.log("startConnection " + data);
+                    self.connectionExists = true;
+                    self.onConnected.emit();
+                    //console.log("Send  onConnected");
+                }).catch((error: any) => {
+                    console.log("Could not connect " + error);
+                });
+            }
+            catch (e)
+            {
+                console.log(e);
+            }
+        }
+        */
+        //connection.send("connect", "", "");
+        if (connection.state == signalR.HubConnectionState.Connected) {
+            self.connectionExists = true;
+            self.onConnected.emit();
+            console.log("Connection is connected");
+        }
+        try {
+                console.log("Connection is disconnected. Try to connect...");
+                connection.start().then((data: any) => {
+                    console.log("startConnection " + data);
+                    self.connectionExists = true;
+                    self.onConnected.emit();
+                    //console.log("Send  onConnected");
+                }).catch((error: any) => {
+                    console.log("Could not connect " + error);
+                });
+            }
+            catch (e)
+            {
+                console.log(e);
+            }
     }
 }

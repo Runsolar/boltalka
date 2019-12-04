@@ -9,7 +9,7 @@ import { TransportService } from './transport.service';
   templateUrl: './users-online.component.html',
   styleUrls: ['./users-online.component.css']
 })
-export class UsersOnlineComponent {
+export class UsersOnlineComponent implements OnInit {
 
     myId: number = 0;
     myGid: number = 0;
@@ -24,6 +24,11 @@ export class UsersOnlineComponent {
         this.apptransport = _apptransport;
         this.usersonline = _apptransport.usersonline;
         //this.subscribeToEventsFromTransport();
+    }
+
+    ngOnInit() {
+
+        this.apptransport.checkConnectionState();
     }
 
     ClkOnNickName = function (recieverNickName: string, recieverId: number): void {
@@ -64,7 +69,7 @@ export class UsersOnlineComponent {
         self.apptransport.changeUsersCount.subscribe((UsersCount: number) => {
             self.usersCount = UsersCount;
         });
-
+*/
         // получаем событие об успешной авторизации
         self.apptransport.onUserIsLoggedInAndAuth.subscribe((ImAuth: boolean) => {
             self.myId = self.apptransport.myId;
@@ -72,7 +77,7 @@ export class UsersOnlineComponent {
             self.auth = ImAuth;
             self.myConnectionId = self.apptransport.myConnectionId;
         });
-        */
+       
     };
 
 }

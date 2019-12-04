@@ -51,7 +51,7 @@ export class SenderComponent implements OnInit {
     */
     onClickSendAuth = function (): void {
         if ((this.userName.length) > 0 && (this.userPassword.length > 0)) {
-            this.apptransport.server.connect(this.userName, this.userPassword);
+            this.apptransport.sendAuthDataOnServer(this.userName, this.userPassword);
         }
     }
 
@@ -89,15 +89,15 @@ export class SenderComponent implements OnInit {
     //Подписываемся к событиям сервера
     private subscribeToEventsFromTransport(): void {
         let self = this;
-/*
+
         //Получаем событие об успешной авторизации
-        self.apptransport.onUserIsLoggedInAndAuth.subscribe((ImAuth: boolean) => {
-            self.myId = self.apptransport.MyId;
-            self.myGid = self.apptransport.MyGid;
-            self.auth = ImAuth;
-            self.myConnectionId = self.apptransport.MyConnectionId;
+        self.apptransport.onUserIsLoggedInAndAuth.subscribe((imAuth: boolean) => {
+            self.myId = self.apptransport.myId;
+            self.myGid = self.apptransport.myGid;
+            self.auth = imAuth;
+            self.myConnectionId = self.apptransport.myConnectionId;
         });
-        */
+      
     }
 
 }

@@ -101,7 +101,6 @@ namespace boltalka.Hubs
         // Подключение нового пользователя
         public async Task connect(string userName, string userPassword)
         {
-
             User user = users.FirstOrDefault(u => u.nickName == userName && u.password == userPassword);
             var connectionId = Context.ConnectionId;
 
@@ -111,6 +110,7 @@ namespace boltalka.Hubs
                 await Clients.Caller.SendAsync("onConnectedUsersOnlineList", usersOnline);
                 //Отправляем список последних сообщений
                 await Clients.Caller.SendAsync("onConnectedLastOutboundMessages", lastOutboundMessages);
+                return;
             }
             else if (user.banned == true)
             {
@@ -158,6 +158,7 @@ namespace boltalka.Hubs
                 await _newMessageFromClient(inMessage);
             }
 
+            return;
         }
 
     }
