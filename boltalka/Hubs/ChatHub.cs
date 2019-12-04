@@ -96,6 +96,8 @@ namespace boltalka.Hubs
                 }
             }
 
+            return;
+
         }
 
         // Подключение нового пользователя

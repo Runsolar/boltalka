@@ -62,7 +62,7 @@ export class SenderComponent implements OnInit {
 
         if (this.msg.length == 0) return -1;
 
-        newOutboundMessage.connectionId = this.MyConnectionId;
+        newOutboundMessage.connectionId = this.myConnectionId;
         newOutboundMessage.receiverId = 0;
         //Пользовательское сообщение
         newOutboundMessage.instruction = 0;

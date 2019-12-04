@@ -23,7 +23,7 @@ export class UsersOnlineComponent implements OnInit {
     constructor(private _apptransport: TransportService) {
         this.apptransport = _apptransport;
         this.usersonline = _apptransport.usersonline;
-        //this.subscribeToEventsFromTransport();
+        this.subscribeToEventsFromTransport();
     }
 
     ngOnInit() {
@@ -71,10 +71,10 @@ export class UsersOnlineComponent implements OnInit {
         });
 */
         // получаем событие об успешной авторизации
-        self.apptransport.onUserIsLoggedInAndAuth.subscribe((ImAuth: boolean) => {
+        self.apptransport.onUserIsLoggedInAndAuth.subscribe((imAuth: boolean) => {
             self.myId = self.apptransport.myId;
             self.myGid = self.apptransport.myGid;
-            self.auth = ImAuth;
+            self.auth = imAuth;
             self.myConnectionId = self.apptransport.myConnectionId;
         });
        
