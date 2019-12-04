@@ -5,10 +5,12 @@ import { User } from "./user.model";
 import { OutboundMessage } from "./outbound-message.model";
 import { IncomingMessage } from "./incoming-message.model";
 
+
 const connection = new signalR.HubConnectionBuilder()
     .withUrl("/hub")
     .configureLogging(signalR.LogLevel.Information)
     .build();
+
 
 @Injectable({
     providedIn: 'root'
@@ -35,7 +37,8 @@ export class TransportService {
     constructor() {
         this.usersonline = new Array<User>();
         this.incomingmessages = new Array<IncomingMessage>();
-        this.registerOnServerEvents();
+        this.startConnection();
+        this.registerOnServerEvents();   
     }
 
     private registerOnServerEvents(): void {
@@ -159,76 +162,28 @@ export class TransportService {
         newOutboundMessage.prvMsg = false;
         this.sendMsgOnServer(newOutboundMessage);
     }
-/*
+
     private startConnection = (): void => {
-        connection.start().catch(function (err) {
-            return console.error(err.toString());
+        let self: TransportService = this;
+        connection.start().then(function (arg) {
+            if (connection.state == signalR.HubConnectionState.Disconnected)
+                console.log("Connection disconnected");
+            if (connection.state == signalR.HubConnectionState.Connected) {
+                console.log("Connection Connected");
+                connection.send("connect", "", "");
+                self.connectionExists = true;
+                self.onConnected.emit();
+            }
+        }).catch((error: any) => {
+            console.log("Could not connect " + error);
         });
     }
-    */
+   
     // подписываемся к событиям сервера
     private subscribeToEvents = (): void => {
         // получить список кто онлайн
         this.onConnected.subscribe(() => {
             connection.send("connect", "", "");
         });
-    };
-/*
-    private startConnection = (): void => {
-        let self: TransportService = this;
-        connection.start().then((data: any) => {
-            console.log("startConnection " + data);
-            self.connectionExists = true;
-            self.onConnected.emit();
-            console.log("Send  onConnected");
-        }).catch((error: any) => {
-            console.log("Could not connect " + error);
-        });
-    }
-*/
-
-    public checkConnectionState = (): void => {
-        let self: TransportService = this;
-        console.log("Checking connection state...");
-        /*
-        if (connection.state == signalR.HubConnectionState.Disconnected) {
-            try {
-                console.log("Connection is disconnected. Try to connect...");
-                connection.start().then((data: any) => {
-                    console.log("startConnection " + data);
-                    self.connectionExists = true;
-                    self.onConnected.emit();
-                    //console.log("Send  onConnected");
-                }).catch((error: any) => {
-                    console.log("Could not connect " + error);
-                });
-            }
-            catch (e)
-            {
-                console.log(e);
-            }
-        }
-        */
-        //connection.send("connect", "", "");
-        if (connection.state == signalR.HubConnectionState.Connected) {
-            self.connectionExists = true;
-            self.onConnected.emit();
-            console.log("Connection is connected");
-        }
-        try {
-                console.log("Connection is disconnected. Try to connect...");
-                connection.start().then((data: any) => {
-                    console.log("startConnection " + data);
-                    self.connectionExists = true;
-                    self.onConnected.emit();
-                    //console.log("Send  onConnected");
-                }).catch((error: any) => {
-                    console.log("Could not connect " + error);
-                });
-            }
-            catch (e)
-            {
-                console.log(e);
-            }
-    }
+    }; 
 }

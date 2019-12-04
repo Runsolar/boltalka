@@ -28,7 +28,7 @@ export class UsersOnlineComponent implements OnInit {
 
     ngOnInit() {
 
-        this.apptransport.checkConnectionState();
+        //this.apptransport.checkConnectionState();
     }
 
     ClkOnNickName = function (recieverNickName: string, recieverId: number): void {
